@@ -8,11 +8,8 @@ enum TetrisShapeType
     LINE,
     SQUARE,
     L,
-<<<<<<< HEAD
     REVERSE_L,
     REVERSE_Z,
-=======
->>>>>>> e9811d98695173cbab2cf1d649b03efd344d6467
     Z,
     T,
 
@@ -32,10 +29,9 @@ public class TetrisControl {
     private TetrisShapeType[] pointsMatrix;
 
     private double time;
-<<<<<<< HEAD
+
     private double speed = 8;
-=======
->>>>>>> e9811d98695173cbab2cf1d649b03efd344d6467
+
     private final int TETRIS_WIDTH = 12;
     private final int TETRIS_HEIGHT = 22;
 
@@ -54,7 +50,7 @@ public class TetrisControl {
 
     public void update(double deltatime)
     {
-<<<<<<< HEAD
+
         time += deltatime;
         if(time >= speed)
         {
@@ -74,9 +70,7 @@ public class TetrisControl {
                 this.pointsMatrix[x + (y-1) * TETRIS_WIDTH] = points[x + y * TETRIS_WIDTH];
             }
         }
-=======
 
->>>>>>> e9811d98695173cbab2cf1d649b03efd344d6467
     }
 
     private void line_complete() {
@@ -97,7 +91,7 @@ public class TetrisControl {
                 {
                     this.pointsMatrix[x + y * TETRIS_WIDTH] = TetrisShapeType.NONE;
                 }
-<<<<<<< HEAD
+
 
                 this.movedown_lines(y);
             }
@@ -164,99 +158,54 @@ public class TetrisControl {
         }
 
         return false;
-=======
-            }
-        }
 
     }
 
-    private void moveY()
-    {
-        for (int i = 0; i < 4;i++)
-        {
-            this.current_position[i].setY(this.current_position[i].getY()+1);
-        }
->>>>>>> e9811d98695173cbab2cf1d649b03efd344d6467
-    }
-
-    private void generatePoints()
-    {
+    private void generatePoints() {
         Random rand = new Random();
         int id = rand.nextInt(4);
-<<<<<<< HEAD
-        int startPos = (int)(TETRIS_WIDTH/2)-1;
+
+        int startPos = (int) (TETRIS_WIDTH / 2) - 1;
 
         this.current_position = new Point[4];
-        switch(TetrisShapeType.values()[id])
-        {
+        switch (TetrisShapeType.values()[id]) {
             case LINE:
-=======
-        int startPos = (int) TETRIS_WIDTH/2;
 
-        this.current_position = new Point[4];
-        switch(id)
-        {
-            case 0:
->>>>>>> e9811d98695173cbab2cf1d649b03efd344d6467
-                for (int i=0;i<=4;i++)
-                {
-                    this.current_position[i] = new Point(startPos,i);
+                for (int i = 0; i <= 4; i++) {
+                    this.current_position[i] = new Point(startPos, i);
                 }
                 break;
-<<<<<<< HEAD
+
             case SQUARE:
-=======
-            case 1:
->>>>>>> e9811d98695173cbab2cf1d649b03efd344d6467
-                this.current_position[0] = new Point(startPos,0);
-                this.current_position[2] = new Point(startPos,1);
-                this.current_position[1] = new Point(startPos+1,0);
-                this.current_position[3] = new Point(startPos+1,1);
+                this.current_position[0] = new Point(startPos, 0);
+                this.current_position[2] = new Point(startPos, 1);
+                this.current_position[1] = new Point(startPos + 1, 0);
+                this.current_position[3] = new Point(startPos + 1, 1);
                 break;
-<<<<<<< HEAD
+
             case L:
-=======
-            case 2:
->>>>>>> e9811d98695173cbab2cf1d649b03efd344d6467
-                this.current_position[0] = new Point(startPos,0);
-                this.current_position[1] = new Point(startPos,1);
-                this.current_position[2] = new Point(startPos,2);
-                this.current_position[3] = new Point(startPos+1,2);
-<<<<<<< HEAD
+                this.current_position[0] = new Point(startPos, 0);
+                this.current_position[1] = new Point(startPos, 1);
+                this.current_position[2] = new Point(startPos, 2);
+                this.current_position[3] = new Point(startPos + 1, 2);
+
             case T:
-=======
-            case 3:
->>>>>>> e9811d98695173cbab2cf1d649b03efd344d6467
-                this.current_position[0] = new Point(startPos,0);
-                this.current_position[1] = new Point(startPos,1);
-                this.current_position[2] = new Point(startPos+1,1);
-                this.current_position[3] = new Point(startPos+1,2);
+                this.current_position[0] = new Point(startPos, 0);
+                this.current_position[1] = new Point(startPos, 1);
+                this.current_position[2] = new Point(startPos + 1, 1);
+                this.current_position[3] = new Point(startPos + 1, 2);
                 break;
-<<<<<<< HEAD
+
             case Z:
-=======
-            case 4:
->>>>>>> e9811d98695173cbab2cf1d649b03efd344d6467
-                this.current_position[0] = new Point(startPos,0);
-                this.current_position[1] = new Point(startPos+1,0);
-                this.current_position[2] = new Point(startPos+2,0);
-                this.current_position[3] = new Point(startPos+1,1);
+                this.current_position[0] = new Point(startPos, 0);
+                this.current_position[1] = new Point(startPos + 1, 0);
+                this.current_position[2] = new Point(startPos + 2, 0);
+                this.current_position[3] = new Point(startPos + 1, 1);
                 break;
+
         }
-
     }
 
-<<<<<<< HEAD
-=======
-
-   /* public void move(boolean x,boolean y)
-    {
-        current.setX(current.getX() + (x ? 1 : -1));
-        current.setY(current.getY() + (y ? 1 : -1));
-    }
-    */
-
->>>>>>> e9811d98695173cbab2cf1d649b03efd344d6467
     private TetrisShapeType getShapeType(Point p)
     {
         return pointsMatrix[p.getX() + p.getY() * TETRIS_WIDTH];
