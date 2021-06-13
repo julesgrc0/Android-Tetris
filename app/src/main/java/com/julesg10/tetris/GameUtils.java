@@ -1,4 +1,4 @@
-package com.julesg10.tetris.game;
+package com.julesg10.tetris;
 import java.lang.Math;
 
 class Size

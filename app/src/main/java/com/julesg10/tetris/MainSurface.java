@@ -16,16 +16,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
+public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
 
     private GameThread gameThread;
+    private AudioManager audioManager;
 
-    public GameSurface(Context context)  {
+    public MainSurface(Context context)  {
         super(context);
         this.setFocusable(true);
         this.getHolder().addCallback(this);
     }
-    
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
