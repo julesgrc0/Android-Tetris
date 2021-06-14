@@ -210,4 +210,5 @@ public class TetrisControl {
     {
         return pointsMatrix[p.getX() + p.getY() * TETRIS_WIDTH];
     }
+
 }
