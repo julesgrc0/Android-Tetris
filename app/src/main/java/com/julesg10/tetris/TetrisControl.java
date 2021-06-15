@@ -24,79 +24,83 @@ public class TetrisControl {
     private Point[] current_position;
     private TetrisShapeType current_type;
 
-    private TetrisShapeType[] pointsMatrix;
+    private TetrisShapeType[][] pointsMatrix;
     private double time;
     private double speed = 8;
 
-    public final int TETRIS_WIDTH = 12;
-    public final int TETRIS_HEIGHT = 22;
+    public final int TETRIS_WIDTH = 11;
+    public final int TETRIS_HEIGHT = 19;
 
     public TetrisControl()
     {
-        this.pointsMatrix = new TetrisShapeType[TETRIS_WIDTH * TETRIS_HEIGHT];
+        this.pointsMatrix = new TetrisShapeType[TETRIS_WIDTH][TETRIS_HEIGHT];
 
         for(int x = 0;x < TETRIS_WIDTH;x++)
         {
             for(int y = 0;y < TETRIS_HEIGHT;y++)
             {
-                this.pointsMatrix[x + y * TETRIS_WIDTH] = TetrisShapeType.NONE;
+                this.pointsMatrix[x][y] = TetrisShapeType.NONE;
             }
         }
     }
 
-    public TetrisShapeType[] getPointsMatrix()
+    public int[] getTetrisShapeColor(TetrisShapeType type)
+    {
+        int[] argb = new int[4];
+        argb[0] = 255;
+        argb[1] = 0;
+        argb[2] = 0;
+        argb[3] = 0;
+
+        switch(type) {
+            case NONE:
+                argb[1] = 60;
+                argb[2] = 60;
+                argb[3] = 60;
+                break;
+            case LINE:
+                argb[1] = 0;
+                argb[2] = 240;
+                argb[3] = 240;
+                break;
+            case SQUARE:
+                argb[1] = 240;
+                argb[2] = 240;
+                argb[3] = 0;
+                break;
+            case L:
+                argb[1] = 0;
+                argb[2] = 0;
+                argb[3] = 240;
+                break;
+            case REVERSE_L:
+                argb[1] = 240;
+                argb[2] = 160;
+                argb[3] = 0;
+                break;
+            case REVERSE_Z:
+                argb[1] = 0;
+                argb[2] = 240;
+                argb[3] = 0;
+                break;
+            case Z:
+                argb[1] = 240;
+                argb[2] = 0;
+                argb[3] = 0;
+                break;
+            case T:
+                argb[1] = 160;
+                argb[2] = 0;
+                argb[3] = 240;
+                break;
+        }
+
+        return argb;
+    }
+
+    public TetrisShapeType[][] getPointsMatrix()
     {
         return this.pointsMatrix;
-    }
-
-    public void update(double deltatime)
-    {
-        time += deltatime;
-        if(time >= speed)
-        {
-            time = 0;
-            this.moveY();
-        }
-    }
-
-    private void movedown_lines(int start_y)
-    {
-        TetrisShapeType[] points = this.pointsMatrix;
-
-        for (int y = 1; y < start_y; y++)
-        {
-            for (int x = 0; x < TETRIS_WIDTH;x++)
-            {
-                this.pointsMatrix[x + (y-1) * TETRIS_WIDTH] = points[x + y * TETRIS_WIDTH];
-            }
-        }
-
-    }
-
-    private void line_complete() {
-
-        for (int y = 0; y < TETRIS_HEIGHT; y++) {
-            boolean stop = false;
-            for (int x = 0; x < TETRIS_WIDTH; x++) {
-                if(this.pointsMatrix[x + y * TETRIS_WIDTH] == TetrisShapeType.NONE)
-                {
-                    stop = true;
-                   break;
-                }
-            }
-
-            if(!stop)
-            {
-                for (int x = 0; x < TETRIS_WIDTH; x++)
-                {
-                    this.pointsMatrix[x + y * TETRIS_WIDTH] = TetrisShapeType.NONE;
-                }
-
-
-                this.movedown_lines(y);
-            }
-        }
-
     }
 
     public boolean moveX(boolean add)
@@ -208,7 +212,7 @@ public class TetrisControl {
 
     private TetrisShapeType getShapeType(Point p)
     {
-        return pointsMatrix[p.getX() + p.getY() * TETRIS_WIDTH];
+        return pointsMatrix[(int)p.getX()][(int)p.getY()];
     }
 
 }
