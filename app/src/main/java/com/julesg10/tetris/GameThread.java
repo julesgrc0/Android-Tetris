@@ -16,33 +16,40 @@ public class GameThread extends Thread {
 
     @Override
     public void run()  {
-        long startTime = System.nanoTime();
-
+        long start = System.nanoTime();
+        long deltastart = System.nanoTime();
+        int frames = 0;
         while(running)  {
-            Canvas canvas= null;
-            try {
-                canvas = this.surfaceHolder.lockCanvas();
-                synchronized (canvas)  {
-                    this.gameSurface.update();
-                    this.gameSurface.draw(canvas);
-                }
-            }catch(Exception e)  {
-            } finally {
-                if(canvas!= null)  {
-                    this.surfaceHolder.unlockCanvasAndPost(canvas);
-                }
-            }
-            long now = System.nanoTime() ;
-            long waitTime = (now - startTime)/1000000;
-            if(waitTime < 10)  {
-                waitTime= 10;
-            }
-            try {
-                this.sleep(waitTime);
-            } catch(InterruptedException e)  {
+            double deltatime = (System.nanoTime() - deltastart) * Math.pow(10,-9);
+            double ms = (System.nanoTime() - start) * Math.pow(10,-6);
 
+            deltastart = System.nanoTime();
+            frames++;
+
+            if(ms >= 1000)
+            {
+                start = System.nanoTime();
+                frames = 0;
             }
-            startTime = System.nanoTime();
+
+            this.canvasUpdate(deltatime);
+        }
+    }
+
+    private void canvasUpdate(double deltatime)
+    {
+        Canvas canvas= null;
+        try {
+            canvas = this.surfaceHolder.lockCanvas();
+            synchronized (canvas)  {
+                this.gameSurface.update(deltatime);
+                this.gameSurface.draw(canvas);
+            }
+        }catch(Exception e)  {
+        } finally {
+            if(canvas!= null)  {
+                this.surfaceHolder.unlockCanvasAndPost(canvas);
+            }
         }
     }
 

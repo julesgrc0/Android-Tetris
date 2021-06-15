@@ -1,6 +1,4 @@
-package com.julesg10.tetris.game;
-
-
+package com.julesg10.tetris;
 import java.util.Random;
 
 enum TetrisShapeType
@@ -27,13 +25,11 @@ public class TetrisControl {
     private TetrisShapeType current_type;
 
     private TetrisShapeType[] pointsMatrix;
-
     private double time;
-
     private double speed = 8;
 
-    private final int TETRIS_WIDTH = 12;
-    private final int TETRIS_HEIGHT = 22;
+    public final int TETRIS_WIDTH = 12;
+    public final int TETRIS_HEIGHT = 22;
 
     public TetrisControl()
     {
@@ -48,9 +44,13 @@ public class TetrisControl {
         }
     }
 
+    public TetrisShapeType[] getPointsMatrix()
+    {
+        return this.pointsMatrix;
+    }
+
     public void update(double deltatime)
     {
-
         time += deltatime;
         if(time >= speed)
         {
