@@ -27,6 +27,12 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
     private AudioManager audioManager;
     private TetrisControl tetrisControl;
     private boolean tetrisRunning = false;
+    private boolean tetrisMatrixInit = false;
+    private int tetrisTileSize = 0;
+    private int spaceBandSize = 2;
+    private double tetrisSpeed = 100;
+    private double tetrisTime = 0;
+    private double gameTime = 0;
 
     public MainSurface(Context context) {
         super(context);
@@ -41,6 +47,7 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
             if(!this.tetrisRunning)
             {
                 this.tetrisRunning = true;
+                this.tetrisControl.update();
             }else{
                 int x = (int) event.getX();
                 int y = (int) event.getY();
@@ -54,12 +61,64 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
         if(!this.tetrisRunning)
         {
             GameDraw.btnTime +=deltatime;
+        }else{
+            this.gameTime += deltatime;
+            this.updateSpeed();
+
+            this.tetrisTime += deltatime;
+            if(tetrisTime >= this.tetrisSpeed/100)
+            {
+                this.tetrisTime = 0;
+                this.tetrisControl.update();
+            }
+        }
+    }
+
+    private void updateSpeed()
+    {
+        if(this.gameTime >= 10)
+        {
+            this.tetrisSpeed = 50;
+        }
+
+        if(gameTime >= 60)
+        {
+            this.tetrisSpeed = 20;
+        }
+
+        if(gameTime >= 90)
+        {
+            this.tetrisSpeed = 10;
+        }
+
+        if(gameTime >= 120)
+        {
+            this.tetrisSpeed = 5;
         }
     }
 
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
+        if(!this.tetrisMatrixInit)
+        {
+            this.tetrisMatrixInit = true;
+
+            this.tetrisTileSize = (int)Math.round(canvas.getWidth() / 10);
+
+            this.tetrisControl.TETRIS_HEIGHT = (int)(canvas.getHeight()/this.tetrisTileSize) - this.spaceBandSize;
+
+            if(this.tetrisControl.TETRIS_HEIGHT < 5)
+            {
+                this.tetrisControl.TETRIS_HEIGHT = 5;
+            }else if(this.tetrisControl.TETRIS_HEIGHT > 20)
+            {
+                this.tetrisControl.TETRIS_HEIGHT = 20;
+            }
+
+            this.tetrisControl.Init();
+        }
+
         Paint paint = new Paint();
         if(!this.tetrisRunning)
         {
@@ -68,14 +127,12 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
             GameDraw.drawPlayButton(canvas);
             canvas.drawText("Press to start",canvas.getWidth()/2-145, canvas.getHeight()/2 + 290,paint);
         }else {
-            int tileSize = (int) Math.round(canvas.getWidth() / 12);
-
             Size s = new Size();
-            s.width = canvas.getWidth() - tileSize;
-            s.height = canvas.getHeight() - tileSize;
+            s.width = canvas.getWidth();
+            s.height = this.tetrisControl.TETRIS_HEIGHT * this.tetrisTileSize;
 
-            Point pos = new Point(tileSize, tileSize / 2);
-            GameDraw.drawtiles(canvas, pos, s, tileSize, this.tetrisControl);
+            Point pos = new Point(0, 0);
+            GameDraw.drawtiles(canvas, pos, s, this.tetrisTileSize, this.tetrisControl);
         }
     }
 
@@ -88,7 +145,23 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
 
 
     @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height)
+    {
+        this.tetrisMatrixInit = true;
+
+        this.tetrisTileSize = (int)Math.round(width / 10);
+
+        this.tetrisControl.TETRIS_HEIGHT = (int)(height/this.tetrisTileSize) - this.spaceBandSize;
+
+        if(this.tetrisControl.TETRIS_HEIGHT < 5)
+        {
+            this.tetrisControl.TETRIS_HEIGHT = 5;
+        }else if(this.tetrisControl.TETRIS_HEIGHT > 20)
+        {
+            this.tetrisControl.TETRIS_HEIGHT = 20;
+        }
+
+        this.tetrisControl.Init();
     }
 
     @Override

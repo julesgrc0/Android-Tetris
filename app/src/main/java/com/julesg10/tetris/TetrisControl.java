@@ -28,10 +28,14 @@ public class TetrisControl {
     private double time;
     private double speed = 8;
 
-    public final int TETRIS_WIDTH = 11;
-    public final int TETRIS_HEIGHT = 19;
+    public final int TETRIS_WIDTH = 10;
+    public  int TETRIS_HEIGHT = 20;
 
     public TetrisControl()
+    {
+    }
+
+    public void Init()
     {
         this.pointsMatrix = new TetrisShapeType[TETRIS_WIDTH][TETRIS_HEIGHT];
 
@@ -103,66 +107,27 @@ public class TetrisControl {
         return this.pointsMatrix;
     }
 
-    public boolean moveX(boolean add)
+    private Point testPos = new Point(3,-1);
+
+    public void update()
     {
-        int addValue = add ? 1 : -1;
-
-        Point[] futurePos =this.current_position;
-        for (int i = 0; i < 4;i++)
+        if(testPos.getY()+1 < this.TETRIS_HEIGHT)
         {
-            futurePos[i].setX(this.current_position[i].getX() + addValue);
-            if(!(futurePos[i].getX() < this.TETRIS_WIDTH && futurePos[i].getX() >= 0))
-            {
-                return false;
-            }
+            this.setTile(this.testPos,TetrisShapeType.NONE);
+            testPos.setY(testPos.getY()+1);
+            this.setTile(this.testPos,TetrisShapeType.L);
         }
-        boolean collision = false;
-
-        for (int i = 0; i < 4;i++)
-        {
-            if(this.getShapeType(new Point(futurePos[i].getX(),futurePos[i].getY())) != TetrisShapeType.NONE)
-            {
-                collision = true;
-                break;
-            }
-        }
-
-        if(!collision)
-        {
-            this.current_position = futurePos;
-            return true;
-        }
-
-        return false;
     }
 
-    public boolean moveY()
+    public boolean setTile(Point p,TetrisShapeType value)
     {
-
-        Point[] futurePos =this.current_position;
-        for (int i = 0; i < 4;i++)
+        if((p.getX() >= 0 && p.getX() < this.TETRIS_WIDTH) && (p.getY() >= 0 && p.getY() < this.TETRIS_HEIGHT))
         {
-            futurePos[i].setY(this.current_position[i].getY()+1);
-        }
-
-        boolean collision = false;
-        for (int i = 0; i < 4;i++)
-        {
-            if(this.getShapeType(new Point(futurePos[i].getX(),futurePos[i].getY())) != TetrisShapeType.NONE)
-            {
-                collision = true;
-                break;
-            }
-        }
-
-        if(!collision)
-        {
-            this.current_position = futurePos;
+            this.pointsMatrix[(int)p.getX()][(int)p.getY()] = value;
             return true;
         }
 
         return false;
-
     }
 
     private void generatePoints() {
@@ -208,11 +173,6 @@ public class TetrisControl {
                 break;
 
         }
-    }
-
-    private TetrisShapeType getShapeType(Point p)
-    {
-        return pointsMatrix[(int)p.getX()][(int)p.getY()];
     }
 
 }
