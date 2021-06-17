@@ -1,4 +1,5 @@
 package com.julesg10.tetris;
+import java.util.Arrays;
 import java.util.Random;
 
 enum TetrisShapeType
@@ -6,10 +7,10 @@ enum TetrisShapeType
     LINE,
     SQUARE,
     L,
-    REVERSE_L,
-    REVERSE_Z,
     Z,
     T,
+    REVERSE_L,
+    REVERSE_Z,
     NONE
 }
 
@@ -54,21 +55,17 @@ public class TetrisControl {
     private TetrisShapeType[][] pointsMatrix;
 
     public final int TETRIS_WIDTH = 10;
-    public  int TETRIS_HEIGHT = 20;
+    public int TETRIS_HEIGHT = 20;
     private int tetrisScore = 0;
 
-    public TetrisControl()
-    {
+    public TetrisControl() {
     }
 
-    public void Init()
-    {
+    public void Init() {
         this.pointsMatrix = new TetrisShapeType[TETRIS_WIDTH][TETRIS_HEIGHT];
 
-        for(int x = 0;x < TETRIS_WIDTH;x++)
-        {
-            for(int y = 0;y < TETRIS_HEIGHT;y++)
-            {
+        for (int x = 0; x < TETRIS_WIDTH; x++) {
+            for (int y = 0; y < TETRIS_HEIGHT; y++) {
                 this.pointsMatrix[x][y] = TetrisShapeType.NONE;
             }
         }
@@ -76,20 +73,18 @@ public class TetrisControl {
         this.generatePoints();
     }
 
-    public int getScore()
-    {
+    public int getScore() {
         return this.tetrisScore;
     }
 
-    public int[] getTetrisShapeColor(TetrisShapeType type)
-    {
+    public int[] getTetrisShapeColor(TetrisShapeType type) {
         int[] argb = new int[4];
         argb[0] = 255;
         argb[1] = 0;
         argb[2] = 0;
         argb[3] = 0;
 
-        switch(type) {
+        switch (type) {
             case NONE:
                 argb[1] = 60;
                 argb[2] = 60;
@@ -135,127 +130,153 @@ public class TetrisControl {
         return argb;
     }
 
-    public TetrisShapeType[][] getPointsMatrix()
-    {
+    public TetrisShapeType[][] getPointsMatrix() {
         return this.pointsMatrix;
     }
 
-    private Point testPos = new Point(3,-1);
+    public TetrisShapeType[][] getActivePointsMatrix() {
+        TetrisShapeType[][] activematrix = new TetrisShapeType[this.TETRIS_WIDTH][];
 
-    public void update()
-    {
-        if(testPos.getY()+1 < this.TETRIS_HEIGHT)
-        {
-            this.setTile(this.testPos,TetrisShapeType.NONE);
-            testPos.setY(testPos.getY()+1);
-            this.setTile(this.testPos,TetrisShapeType.L);
+        for (int i = 0; i < this.TETRIS_WIDTH; i++) {
+            activematrix[i] = this.pointsMatrix[i].clone();
         }
+
+        for (int i = 0; i < this.current_position.length; i++) {
+            if (this.isOnMatrix(this.current_position[i])) {
+                activematrix[(int) this.current_position[i].getX()][(int) this.current_position[i].getY()] = this.current_type;
+            }
+        }
+        return activematrix;
     }
 
-    public boolean setTile(Point p,TetrisShapeType value)
-    {
-        if(this.isOnMatrix(p))
-        {
-            this.pointsMatrix[(int)p.getX()][(int)p.getY()] = value;
+    public TetrisShapeType getActiveType() {
+        return this.current_type;
+    }
+
+    public Point[] getActivePositions() {
+        return this.current_position;
+    }
+
+    public void update() {
+        this.moveDown();
+    }
+
+    public boolean setTile(Point p, TetrisShapeType value) {
+        if (this.isOnMatrix(p)) {
+            this.pointsMatrix[(int) p.getX()][(int) p.getY()] = value;
             return true;
         }
 
         return false;
     }
 
-    public boolean isOnMatrix(Point p)
-    {
-        if((p.getX() >= 0 && p.getX() < this.TETRIS_WIDTH) && (p.getY() >= 0 && p.getY() < this.TETRIS_HEIGHT))
-        {
+    public TetrisShapeType getTile(Point p) {
+        if (this.isOnMatrix(p)) {
+            return this.pointsMatrix[(int) p.getX()][(int) p.getY()];
+        }
+        return TetrisShapeType.NONE;
+    }
+
+    public boolean isOnMatrix(Point p) {
+        if ((p.getX() >= 0 && p.getX() < this.TETRIS_WIDTH) && (p.getY() >= 0 && p.getY() < this.TETRIS_HEIGHT)) {
             return true;
         }
         return false;
     }
 
 
-    private boolean moveX(boolean left)
-    {
-        Point[] future = this.current_position;
+    private boolean moveX(boolean left) {
         int add = left ? -1 : 1;
-        for (int i = 0; i < future.length; i++)
-        {
-            future[i].setX(future[i].getX()+add);
-            if(!(future[i].getX() >= 0 && future[i].getX() < this.TETRIS_WIDTH))
+        boolean valide = true;
+
+        for (int i = 0; i < this.current_position.length; i++) {
+            if(!(this.current_position[i].getX()+add < 0)  && !(this.current_position[i].getX()+add >= this.TETRIS_WIDTH))
             {
-                return false;
-            }else {
-                if( future[i].getY() >= 0 && this.pointsMatrix[(int)future[i].getX()][(int)future[i].getY()] != TetrisShapeType.NONE)
+                Point tmp = new Point(this.current_position[i].getX()+add,this.current_position[i].getY());
+                if(this.getTile(tmp) != TetrisShapeType.NONE)
                 {
-                    return false;
+                    valide = false;
+                    break;
                 }
+            }else{
+                valide = false;
+                break;
             }
         }
 
-        this.current_position = future;
+        if(valide)
+        {
+            for (int i = 0; i < this.current_position.length; i++) {
+                this.current_position[i].setX(this.current_position[i].getX()+add);
+            }
 
-        return true;
+            return true;
+        }else{
+            return false;
+        }
     }
 
-    public boolean left()
-    {
+    public boolean left() {
         return this.moveX(true);
     }
 
-    public boolean right()
-    {
+    public boolean right() {
         return this.moveX(false);
     }
 
-    public boolean rotate()
-    {
-
-
+    public boolean rotate() {
         return false;
     }
 
-    private boolean moveDown()
-    {
-        Point[] future = this.current_position;
-        for (int i = 0; i < future.length; i++) {
-            future[i].setX(future[i].getY() + 1);
+    private boolean moveDown() {
+        boolean valide = true;
 
-            if(!(future[i].getY() >= 0 && future[i].getY() < this.TETRIS_HEIGHT))
+        for (int i = 0; i < this.current_position.length; i++) {
+            if(!(this.current_position[i].getY()+1 >= this.TETRIS_HEIGHT))
             {
-                if (this.pointsMatrix[(int) future[i].getX()][(int) future[i].getY()] != TetrisShapeType.NONE) {
-                    this.stopCurrent();
-                    return false;
+                Point tmp = new Point(this.current_position[i].getY()+1,this.current_position[i].getY());
+                if(this.getTile(tmp) != TetrisShapeType.NONE)
+                {
+                    valide = false;
+                    break;
                 }
             }else{
-                this.stopCurrent();
-                return false;
+                valide = false;
+                break;
             }
         }
-        this.current_position = future;
-        return true;
+
+        if(valide)
+        {
+            for (int i = 0; i < this.current_position.length; i++) {
+                this.current_position[i].setY(this.current_position[i].getY()+1);
+            }
+            return true;
+        }else{
+
+            return false;
+        }
     }
 
-    private void stopCurrent()
-    {
+    private void stopCurrent() {
         for (int i = 0; i < this.current_position.length; i++)
         {
-            this.pointsMatrix[(int) this.current_position[i].getX()][(int)this.current_position[i].getY()] = this.current_type;
-            this.current_position[i] = new Point(-1,-1);
+            this.setTile(this.current_position[i],this.current_type);
         }
-        this.current_type = TetrisShapeType.NONE;
-        this.generatePoints();
         this.checkLines();
+        this.generatePoints();
     }
 
-    private void checkLines()
-    {
+    private void checkLines() {
 
     }
 
     private void generatePoints() {
-        int id = 1;
+        Random rand = new Random();
+        int id = rand.nextInt(4);
+
         this.current_type = TetrisShapeType.values()[id];
-        switch (TetrisShapeType.values()[id])
-        {
+        switch (TetrisShapeType.values()[id]) {
             case SQUARE:
                 this.current_position = this.SQUARE_Points;
                 break;
@@ -280,12 +301,12 @@ public class TetrisControl {
         }
     }
 
-    private final Point[] SQUARE_Points = {new Point(3,-2),new Point(4,-2),new Point(3,-1),new Point(4,-1)};
-    private final Point[] L_Points = {new Point(3,-2),new Point(4,-2),new Point(3,-1),new Point(4,-1)};
-    private final Point[] Z_Points = {new Point(3,-2),new Point(4,-2),new Point(3,-1),new Point(4,-1)};
-    private final Point[] LINE_Points = {new Point(3,-2),new Point(4,-2),new Point(3,-1),new Point(4,-1)};
-    private final Point[] REVERSE_L_Points = {new Point(3,-2),new Point(4,-2),new Point(3,-1),new Point(4,-1)};
-    private final Point[] REVERSE_Z_Points = {new Point(3,-2),new Point(4,-2),new Point(3,-1),new Point(4,-1)};
-    private final Point[] T_Points = {new Point(3,-2),new Point(4,-2),new Point(3,-1),new Point(4,-1)};
+    private final Point[] SQUARE_Points = {new Point(3, -2), new Point(4, -2), new Point(3, -1), new Point(4, -1)};
+    private final Point[] LINE_Points = {new Point(4, -1), new Point(4, -2), new Point(4, -3), new Point(4, -4)};
+    private final Point[] Z_Points = {new Point(3, -2), new Point(4, -2), new Point(4, -1), new Point(5, -1)};
+    private final Point[] T_Points = {new Point(3, -2), new Point(4, -2), new Point(5, -2), new Point(4, -1)};
+    private final Point[] L_Points = {new Point(3, -2), new Point(3, -1), new Point(4, -1), new Point(5, -1)};
 
+    private final Point[] REVERSE_L_Points = {new Point(3, -2), new Point(4, -2), new Point(3, -1), new Point(4, -1)};
+    private final Point[] REVERSE_Z_Points = {new Point(3, -2), new Point(4, -2), new Point(3, -1), new Point(4, -1)};
 }

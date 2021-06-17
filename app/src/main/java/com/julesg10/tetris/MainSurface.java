@@ -26,6 +26,7 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
     private GameThread gameThread;
     private AudioManager audioManager;
     private TetrisControl tetrisControl;
+    private GameDraw tetrisDraw;
 
     private TetrisClickActionType lastacion = TetrisClickActionType.NONE;
 
@@ -44,6 +45,7 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
         this.setFocusable(true);
         this.getHolder().addCallback(this);
         this.tetrisControl = new TetrisControl();
+        this.tetrisDraw = new GameDraw();
     }
 
     @Override
@@ -66,7 +68,7 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
     public void update(double deltatime) {
         if(!this.tetrisRunning)
         {
-            GameDraw.btnTime +=deltatime;
+            this.tetrisDraw.btnTime +=deltatime;
         }else{
             if(this.lastacion != TetrisClickActionType.NONE)
             {
@@ -147,7 +149,7 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
         {
             paint.setARGB(255,150,150,150);
             paint.setTextSize(50);
-            GameDraw.drawPlayButton(canvas);
+            this.tetrisDraw.drawPlayButton(canvas);
             canvas.drawText("Press to start",canvas.getWidth()/2-145, canvas.getHeight()/2 + 290,paint);
         }else {
             Size s = new Size();
@@ -155,7 +157,7 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
             s.height = this.tetrisControl.TETRIS_HEIGHT * this.tetrisTileSize;
 
             Point pos = new Point(0, 0);
-            GameDraw.drawtiles(canvas, pos, s, this.tetrisTileSize, this.tetrisControl);
+            this.tetrisDraw.drawtiles(canvas, pos, s, this.tetrisTileSize, this.tetrisControl);
         }
     }
 

@@ -7,13 +7,19 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 
 public class GameDraw {
+    public GameDraw() {}
 
-    public static void drawtiles(Canvas canvas, Point pos, Size s, float tileSize, TetrisControl tetrisControl) {
+    public void drawtiles(Canvas canvas, Point pos, Size s, float tileSize, TetrisControl tetrisControl) {
         Paint p = new Paint();
         Paint b = new Paint();
 
         b.setARGB(255, 0, 0, 0);
-        TetrisShapeType[][] points = tetrisControl.getPointsMatrix();
+
+        TetrisShapeType [][] points = new TetrisShapeType[tetrisControl.TETRIS_WIDTH][];
+        for(int i = 0; i < tetrisControl.TETRIS_WIDTH; i++)
+        {
+            points[i] = tetrisControl.getActivePointsMatrix()[i].clone();
+        }
 
         for(int x = 0;x < tetrisControl.TETRIS_WIDTH;x++)
         {
@@ -35,10 +41,9 @@ public class GameDraw {
         }
     }
 
-    public static double btnTime = 0.0;
-    public static boolean reverseBtnTime = false;
+    public double btnTime = 0.0;
 
-    public static void drawPlayButton(Canvas canvas) {
+    public void drawPlayButton(Canvas canvas) {
         Paint paint = new Paint();
         float x = canvas.getWidth()/2;
         float y = canvas.getHeight()/2;
