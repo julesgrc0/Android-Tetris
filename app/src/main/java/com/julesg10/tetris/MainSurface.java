@@ -9,6 +9,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -24,9 +25,9 @@ import java.util.List;
 public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
 
     private GameThread gameThread;
-    private AudioManager audioManager;
     private TetrisControl tetrisControl;
     private GameDraw tetrisDraw;
+    private MediaPlayer mediaPlayer;
 
     private TetrisClickActionType lastacion = TetrisClickActionType.NONE;
 
@@ -38,6 +39,7 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
     private double tetrisSpeed = 100;
     private double tetrisTime = 0;
     private double gameTime = 0;
+    private int tetrisSongId = 0;
 
 
     public MainSurface(Context context) {
@@ -46,6 +48,9 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
         this.getHolder().addCallback(this);
         this.tetrisControl = new TetrisControl();
         this.tetrisDraw = new GameDraw();
+        
+        this.mediaPlayer = MediaPlayer.create(context, R.raw.tetris);
+        this.mediaPlayer.setLooping(true);
     }
 
     @Override
@@ -55,6 +60,7 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
             {
                 this.tetrisRunning = true;
                 this.tetrisControl.update();
+                this.mediaPlayer.start();
             }else{
                 int x = (int) event.getX();
                 int y = (int) event.getY();
