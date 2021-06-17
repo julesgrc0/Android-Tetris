@@ -48,7 +48,7 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
         this.getHolder().addCallback(this);
         this.tetrisControl = new TetrisControl();
         this.tetrisDraw = new GameDraw();
-        
+
         this.mediaPlayer = MediaPlayer.create(context, R.raw.tetris);
         this.mediaPlayer.setLooping(true);
     }

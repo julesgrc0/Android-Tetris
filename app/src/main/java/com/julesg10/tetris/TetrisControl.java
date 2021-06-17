@@ -49,15 +49,15 @@ class TetrisClickAction
 
 public class TetrisControl {
 
-    private Point[] current_position;
+    private Point[] current_position = new Point[4];
     private TetrisShapeType current_type;
+    private Random rand = new Random();
 
     private TetrisShapeType[][] pointsMatrix;
-
     public final int TETRIS_WIDTH = 10;
     public int TETRIS_HEIGHT = 20;
-    private int tetrisScore = 0;
 
+    private int tetrisScore = 0;
     public TetrisControl() {
     }
 
@@ -234,7 +234,7 @@ public class TetrisControl {
         for (int i = 0; i < this.current_position.length; i++) {
             if(!(this.current_position[i].getY()+1 >= this.TETRIS_HEIGHT))
             {
-                Point tmp = new Point(this.current_position[i].getY()+1,this.current_position[i].getY());
+                Point tmp = new Point(this.current_position[i].getX(),this.current_position[i].getY()+1);
                 if(this.getTile(tmp) != TetrisShapeType.NONE)
                 {
                     valide = false;
@@ -253,7 +253,7 @@ public class TetrisControl {
             }
             return true;
         }else{
-
+            this.stopCurrent();
             return false;
         }
     }
@@ -263,17 +263,48 @@ public class TetrisControl {
         {
             this.setTile(this.current_position[i],this.current_type);
         }
-        this.checkLines();
+
+
+        //this.checkLines();
+
         this.generatePoints();
     }
 
     private void checkLines() {
+        for (int i = 0; i < this.TETRIS_HEIGHT; i++)
+        {
+            boolean stop = false;
+            for (int j = 0; j < this.TETRIS_WIDTH; j++)
+            {
+                if(this.getTile(new Point(i,j)) == TetrisShapeType.NONE)
+                {
+                    stop = true;
+                    break;
+                }
+            }
 
+            if(!stop)
+            {
+                this.clearLine(i);
+                this.tetrisScore += 10 * i;
+                i--;
+            }
+        }
+    }
+
+    private void clearLine(int y)
+    {
+        for(int i = y;i < 0; i--)
+        {
+            for(int j = 0;j<this.TETRIS_WIDTH;j++)
+            {
+                this.setTile(new Point(j,i),this.getTile(new Point(j,i+1)));
+            }
+        }
     }
 
     private void generatePoints() {
-        Random rand = new Random();
-        int id = rand.nextInt(4);
+        int id = this.rand.nextInt(4);
 
         this.current_type = TetrisShapeType.values()[id];
         switch (TetrisShapeType.values()[id]) {
