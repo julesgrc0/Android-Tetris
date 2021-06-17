@@ -26,13 +26,18 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
     private GameThread gameThread;
     private AudioManager audioManager;
     private TetrisControl tetrisControl;
+
+    private TetrisClickActionType lastacion = TetrisClickActionType.NONE;
+
     private boolean tetrisRunning = false;
     private boolean tetrisMatrixInit = false;
+
     private int tetrisTileSize = 0;
     private int spaceBandSize = 2;
     private double tetrisSpeed = 100;
     private double tetrisTime = 0;
     private double gameTime = 0;
+
 
     public MainSurface(Context context) {
         super(context);
@@ -51,6 +56,7 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
             }else{
                 int x = (int) event.getX();
                 int y = (int) event.getY();
+                this.lastacion = TetrisClickAction.getAction(this.spaceBandSize*this.tetrisTileSize,new Point(x,y));
             }
             return true;
         }
@@ -62,6 +68,22 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
         {
             GameDraw.btnTime +=deltatime;
         }else{
+            if(this.lastacion != TetrisClickActionType.NONE)
+            {
+                if(this.lastacion == TetrisClickActionType.LEFT)
+                {
+                    this.tetrisControl.left();
+                }else if(this.lastacion == TetrisClickActionType.RIGHT)
+                {
+                    this.tetrisControl.right();
+                }else if(this.lastacion == TetrisClickActionType.ROTATE)
+                {
+                 this.tetrisControl.rotate();
+                }
+
+                this.lastacion = TetrisClickActionType.NONE;
+            }
+
             this.gameTime += deltatime;
             this.updateSpeed();
 
@@ -104,8 +126,10 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
         {
             this.tetrisMatrixInit = true;
 
-            this.tetrisTileSize = (int)Math.round(canvas.getWidth() / 10);
+            TetrisClickAction.SURFACE_WIDTH = canvas.getWidth();
+            TetrisClickAction.SURFACE_HEIGHT = canvas.getHeight();
 
+            this.tetrisTileSize = (int)Math.round(canvas.getWidth() / 10);
             this.tetrisControl.TETRIS_HEIGHT = (int)(canvas.getHeight()/this.tetrisTileSize) - this.spaceBandSize;
 
             if(this.tetrisControl.TETRIS_HEIGHT < 5)
@@ -115,7 +139,6 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
             {
                 this.tetrisControl.TETRIS_HEIGHT = 20;
             }
-
             this.tetrisControl.Init();
         }
 
@@ -149,8 +172,10 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
     {
         this.tetrisMatrixInit = true;
 
-        this.tetrisTileSize = (int)Math.round(width / 10);
+        TetrisClickAction.SURFACE_WIDTH = width;
+        TetrisClickAction.SURFACE_HEIGHT = height;
 
+        this.tetrisTileSize = (int)Math.round(width / 10);
         this.tetrisControl.TETRIS_HEIGHT = (int)(height/this.tetrisTileSize) - this.spaceBandSize;
 
         if(this.tetrisControl.TETRIS_HEIGHT < 5)
