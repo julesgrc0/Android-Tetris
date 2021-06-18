@@ -8,8 +8,9 @@ class Size
 
 class Point
 {
-    private double x;
-    private double y;
+    public double x;
+    public double y;
+    public boolean isRotationPoint = false;
 
     public Point(double x,double y)
     {
@@ -17,31 +18,18 @@ class Point
         this.y = y;
     }
 
-    public double getDistance(Point p)
-    {
-        double pow_x = Math.pow(x - p.getX(),2);
-        double pow_y = Math.pow(y - p.getY(),2);
-        return Math.sqrt(pow_x + pow_y);
-    }
-
-    public double getX()
-    {
-        return this.x;
-    }
-
-    public double getY()
-    {
-        return this.y;
-    }
-
-    public void setX(double x)
+    public Point(double x,double y,boolean isRotationPoint)
     {
         this.x = x;
+        this.y = y;
+        this.isRotationPoint = isRotationPoint;
     }
 
-    public void setY(double y)
+    public double getDistance(Point p)
     {
-        this.y =y;
+        double pow_x = Math.pow(x - p.x,2);
+        double pow_y = Math.pow(y - p.y,2);
+        return Math.sqrt(pow_x + pow_y);
     }
 }
 

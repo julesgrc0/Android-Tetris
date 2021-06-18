@@ -25,8 +25,8 @@ public class GameDraw {
         {
             for(int y = 0;y < tetrisControl.TETRIS_HEIGHT;y++)
             {
-                int viewX = (int)((x * tileSize) + pos.getX());
-                int viewY = (int)((y * tileSize) + pos.getY());
+                int viewX = (int)((x * tileSize) + pos.x);
+                int viewY = (int)((y * tileSize) + pos.y);
 
                 Rect rect = new Rect(viewX, viewY, (int) (viewX + tileSize), (int) (viewY + tileSize));
                 int[] argb = tetrisControl.getTetrisShapeColor(points[x][y]);
@@ -56,5 +56,36 @@ public class GameDraw {
 
             canvas.drawCircle(x,y,(float)size*i,paint);
         }
+    }
+
+    public void drawHiddenInfos(Canvas canvas,int fps,int height,int width,double tileSize,double time,double globalTime,int score,double speed)
+    {
+        Paint paint = new Paint();
+        int textSize = 30;
+        paint.setTextSize(textSize);
+        paint.setARGB(255,255,255,255);
+        String[] texts = {
+                "FPS "+Integer.toString(fps),
+                Integer.toString(width)+"x"+Integer.toString(width),
+                "Tile "+Double.toString(tileSize),
+                "Time "+Double.toString(time),
+                "Global Time "+Double.toString(globalTime),
+                "Score "+Integer.toString(score),
+                "Speed "+Double.toString(speed),
+        };
+
+        for (int i = 1; i <= texts.length;i++)
+        {
+            canvas.drawText(texts[i-1],10,textSize * i,paint);
+        }
+    }
+
+    public void drawScore(Canvas canvas,int score)
+    {
+        String textScore = "Score: "+Integer.toString(score);
+        Paint paint = new Paint();
+        paint.setTextSize(40);
+        paint.setARGB(255,255,255,255);
+        canvas.drawText(textScore,10,40,paint);
     }
 }

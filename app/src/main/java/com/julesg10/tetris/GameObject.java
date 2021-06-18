@@ -16,10 +16,10 @@ public abstract class GameObject {
 
     public boolean checkCollision(GameObject obj)
     {
-        if(this.position.getX() < obj.getPosition().getX() + obj.getSize().width &&
-                this.position.getX() + size.width > obj.getPosition().getX() &&
-                this.position.getY() < obj.getPosition().getY() + obj.getSize().height &&
-                this.position.getY() + size.height > obj.getPosition().getY())
+        if(this.position.x < obj.getPosition().x + obj.getSize().width &&
+                this.position.x + size.width > obj.getPosition().x &&
+                this.position.y < obj.getPosition().y + obj.getSize().height &&
+                this.position.y + size.height > obj.getPosition().y)
         {
             return true;
         }

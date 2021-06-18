@@ -35,11 +35,12 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
     private boolean tetrisMatrixInit = false;
 
     private int tetrisTileSize = 0;
-    private int spaceBandSize = 2;
-    private double tetrisSpeed = 100;
+    private final int spaceBandSize = 2;
+    private double tetrisSpeed = 50;
     private double tetrisTime = 0;
     private double gameTime = 0;
-    private int tetrisSongId = 0;
+    private boolean showHiddenInfos = false;
+    private boolean showScore = false;
 
 
     public MainSurface(Context context) {
@@ -53,9 +54,26 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
         this.mediaPlayer.setLooping(true);
     }
 
+    private long downstartTime = 0;
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if(event.getAction() == MotionEvent.ACTION_UP)
+        {
+            long pressTime = System.currentTimeMillis() - this.downstartTime;
+            this.downstartTime = 0;
+            if(pressTime >= 500)
+            {
+                if(pressTime >= 1000 && (event.getX() >= 0 && event.getX() <= 50 && event.getY() >= 0 && event.getY() <= 50))
+                {
+                    showHiddenInfos = !showHiddenInfos;
+                }
+                showScore = !showScore;
+            }
+        }
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            this.downstartTime = System.currentTimeMillis();
+
             if(!this.tetrisRunning)
             {
                 this.tetrisRunning = true;
@@ -111,7 +129,7 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
             this.tetrisSpeed = 50;
         }
 
-        if(gameTime >= 60)
+      /*  if(gameTime >= 60)
         {
             this.tetrisSpeed = 20;
         }
@@ -124,7 +142,7 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
         if(gameTime >= 120)
         {
             this.tetrisSpeed = 5;
-        }
+        }*/
     }
 
     @Override
@@ -164,6 +182,14 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
 
             Point pos = new Point(0, 0);
             this.tetrisDraw.drawtiles(canvas, pos, s, this.tetrisTileSize, this.tetrisControl);
+
+            if(showScore && !showHiddenInfos)
+            {
+                this.tetrisDraw.drawScore(canvas,this.tetrisControl.getScore());
+            }else if(showHiddenInfos)
+            {
+                this.tetrisDraw.drawHiddenInfos(canvas,GameThread.getFPS(),canvas.getWidth(),canvas.getHeight(),this.tetrisTileSize,this.tetrisTime,this.gameTime,this.tetrisControl.getScore(),this.tetrisSpeed);
+            }
         }
     }
 

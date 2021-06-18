@@ -8,6 +8,7 @@ public class GameThread extends Thread {
     private boolean running;
     private MainSurface gameSurface;
     private SurfaceHolder surfaceHolder;
+    private static int currentFPS = 0;
 
     public GameThread(MainSurface gameSurface, SurfaceHolder surfaceHolder)  {
         this.gameSurface= gameSurface;
@@ -28,12 +29,18 @@ public class GameThread extends Thread {
 
             if(ms >= 1000)
             {
+                currentFPS = frames;
                 start = System.nanoTime();
                 frames = 0;
             }
 
             this.canvasUpdate(deltatime);
         }
+    }
+
+    public static int getFPS()
+    {
+        return currentFPS;
     }
 
     private void canvasUpdate(double deltatime)
