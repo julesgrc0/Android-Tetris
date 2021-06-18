@@ -49,14 +49,16 @@ class TetrisClickAction
 
 public class TetrisControl {
 
-    private Point[] current_position;
+    private Point[] current_position = new Point[4];
     private TetrisShapeType current_type;
     private final Random rand = new Random();
 
     private TetrisShapeType[][] pointsMatrix;
     public final int TETRIS_WIDTH = 10;
     public int TETRIS_HEIGHT = 20;
+
     private int tetrisScore = 0;
+    public double tetrisSpeed = 50;
 
     private final Point[] SQUARE_Points = {new Point(3, -2), new Point(4, -2), new Point(3, -1), new Point(4, -1)};
     private final Point[] LINE_Points = {new Point(4, -1), new Point(4, -2), new Point(4, -3), new Point(4, -4)};
@@ -69,6 +71,7 @@ public class TetrisControl {
 
     public TetrisControl()
     {
+
     }
 
     public void Init() {
@@ -80,6 +83,14 @@ public class TetrisControl {
             for (int y = 0; y < TETRIS_HEIGHT; y++) {
                 this.pointsMatrix[x][y] = TetrisShapeType.NONE;
             }
+        }
+    }
+
+    private void setCurrentPosition(Point[] p)
+    {
+        for(int i = 0; i < p.length; i++)
+        {
+            this.current_position[i] = new Point(p[i].x,p[i].y);
         }
     }
 
@@ -290,7 +301,7 @@ public class TetrisControl {
             if(!stop)
             {
                 //this.clearLine(i);
-                this.tetrisScore += 10 * i;
+                this.tetrisScore += 10 * this.tetrisSpeed;
                 i--;
             }
         }
@@ -309,28 +320,29 @@ public class TetrisControl {
 
     private void generatePoints() {
         int id = this.rand.nextInt(4);
+
         this.current_type = TetrisShapeType.values()[id];
         switch (this.current_type) {
             case SQUARE:
-                this.current_position = this.SQUARE_Points;
+                this.setCurrentPosition(this.SQUARE_Points);
                 break;
             case L:
-                this.current_position = this.L_Points;
+                this.setCurrentPosition(this.L_Points);
                 break;
             case LINE:
-                this.current_position = this.LINE_Points;
+                this.setCurrentPosition(this.LINE_Points);
                 break;
             case Z:
-                this.current_position = this.Z_Points;
+                this.setCurrentPosition(this.Z_Points);
                 break;
             case REVERSE_L:
-                this.current_position = this.REVERSE_L_Points;
+                this.setCurrentPosition(this.REVERSE_L_Points);
                 break;
             case REVERSE_Z:
-                this.current_position = this.REVERSE_Z_Points;
+                this.setCurrentPosition(this.REVERSE_Z_Points);
                 break;
             case T:
-                this.current_position = this.T_Points;
+                this.setCurrentPosition(this.T_Points);
                 break;
         }
     }

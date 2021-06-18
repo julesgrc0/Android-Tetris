@@ -36,7 +36,7 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
 
     private int tetrisTileSize = 0;
     private final int spaceBandSize = 2;
-    private double tetrisSpeed = 50;
+
     private double tetrisTime = 0;
     private double gameTime = 0;
     private boolean showHiddenInfos = false;
@@ -114,7 +114,7 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
             this.updateSpeed();
 
             this.tetrisTime += deltatime;
-            if(tetrisTime >= this.tetrisSpeed/100)
+            if(tetrisTime >= this.tetrisControl.tetrisSpeed/100)
             {
                 this.tetrisTime = 0;
                 this.tetrisControl.update();
@@ -126,7 +126,7 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
     {
         if(this.gameTime >= 10)
         {
-            this.tetrisSpeed = 50;
+            this.tetrisControl.tetrisSpeed = 50;
         }
 
       /*  if(gameTime >= 60)
@@ -188,7 +188,7 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
                 this.tetrisDraw.drawScore(canvas,this.tetrisControl.getScore());
             }else if(showHiddenInfos)
             {
-                this.tetrisDraw.drawHiddenInfos(canvas,GameThread.getFPS(),canvas.getWidth(),canvas.getHeight(),this.tetrisTileSize,this.tetrisTime,this.gameTime,this.tetrisControl.getScore(),this.tetrisSpeed);
+                this.tetrisDraw.drawHiddenInfos(canvas,GameThread.getFPS(),canvas.getWidth(),canvas.getHeight(),this.tetrisTileSize,this.tetrisTime,this.gameTime,this.tetrisControl.getScore(),this.tetrisControl.tetrisSpeed);
             }
         }
     }
