@@ -69,31 +69,30 @@ public class TetrisControl {
     private final Point[] LINE_Points = {new Point(4, -1), new Point(4, -2), new Point(4, -3), new Point(4, -4)};
     private final Point[] LINE_s1_Points = {new Point(2, -1), new Point(3, -1), new Point(4, -1), new Point(5, -1)};
 
-    private final Point[] Z_Points = {new Point(3, -2), new Point(4, -2), new Point(4, -1), new Point(5, -1)};
-    private final Point[] Z_s1_Points = {new Point(3, -2), new Point(4, -2), new Point(4, -1), new Point(5, -1)};
-    private final Point[] Z_s2_Points = {new Point(3, -2), new Point(4, -2), new Point(4, -1), new Point(5, -1)};
-    private final Point[] Z_s3_Points = {new Point(3, -2), new Point(4, -2), new Point(4, -1), new Point(5, -1)};
+    private final Point[] T_Points =    {new Point(3, -2), new Point(4, -2), new Point(5, -2), new Point(4, -1)};
+    private final Point[] T_s1_Points = {new Point(4, -3), new Point(4, -2), new Point(4, -1), new Point(5, -2)};
+    private final Point[] T_s2_Points = {new Point(3, -1), new Point(4, -1), new Point(5, -1), new Point(4, -2)};
+    private final Point[] T_s3_Points = {new Point(4, -3), new Point(4, -2), new Point(4, -1), new Point(3, -2)};
 
-    private final Point[] T_Points = {new Point(3, -2), new Point(4, -2), new Point(5, -2), new Point(4, -1)};
-    private final Point[] T_s1_Points = {new Point(3, -2), new Point(4, -2), new Point(5, -2), new Point(4, -1)};
-    private final Point[] T_s2_Points = {new Point(3, -2), new Point(4, -2), new Point(5, -2), new Point(4, -1)};
-    private final Point[] T_s3_Points = {new Point(3, -2), new Point(4, -2), new Point(5, -2), new Point(4, -1)};
-
-    private final Point[] L_Points = {new Point(3, -2), new Point(3, -1), new Point(4, -1), new Point(5, -1)};
-    private final Point[] L_s1_Points = {new Point(3, -2), new Point(3, -1), new Point(4, -1), new Point(5, -1)};
+    private final Point[] L_Points = {new Point(3, -2), new Point(4, -2), new Point(5, -2), new Point(5, -1)};
+    private final Point[] L_s1_Points = {new Point(3, -1), new Point(4, -3), new Point(4, -2), new Point(4, -1)};
     private final Point[] L_s2_Points = {new Point(3, -2), new Point(3, -1), new Point(4, -1), new Point(5, -1)};
-    private final Point[] L_s3_Points = {new Point(3, -2), new Point(3, -1), new Point(4, -1), new Point(5, -1)};
+    private final Point[] L_s3_Points = {new Point(3, -1), new Point(3, -2), new Point(3, -3), new Point(4, -3)};
 
-    private final Point[] REVERSE_L_Points = {new Point(5, -2), new Point(3, -1), new Point(4, -1), new Point(5, -1)};
-    private final Point[] REVERSE_L_s1_Points = {new Point(5, -2), new Point(3, -1), new Point(4, -1), new Point(5, -1)};
+    private final Point[] REVERSE_L_Points = {new Point(3, -2), new Point(4, -2), new Point(5, -2), new Point(3, -1)};
+    private final Point[] REVERSE_L_s1_Points = {new Point(5, -1), new Point(4, -3), new Point(4, -2), new Point(4, -1)};
     private final Point[] REVERSE_L_s2_Points = {new Point(5, -2), new Point(3, -1), new Point(4, -1), new Point(5, -1)};
-    private final Point[] REVERSE_L_s3_Points = {new Point(5, -2), new Point(3, -1), new Point(4, -1), new Point(5, -1)};
+    private final Point[] REVERSE_L_s3_Points =  {new Point(3, -1), new Point(3, -2), new Point(3, -3), new Point(4, -1)};
 
-    private final Point[] REVERSE_Z_Points =  {new Point(4, -2), new Point(5, -2), new Point(3, -1), new Point(4, -1)};
-    private final Point[] REVERSE_Z_s1_Points =  {new Point(4, -2), new Point(5, -2), new Point(3, -1), new Point(4, -1)};
-    private final Point[] REVERSE_Z_s2_Points =  {new Point(4, -2), new Point(5, -2), new Point(3, -1), new Point(4, -1)};
-    private final Point[] REVERSE_Z_s3_Points =  {new Point(4, -2), new Point(5, -2), new Point(3, -1), new Point(4, -1)};
+    private final Point[] Z_Points = {new Point(4, -2), new Point(5, -2), new Point(3, -1), new Point(4, -1)};
+    private final Point[] Z_s1_Points = {new Point(5, -1), new Point(5, -2), new Point(4, -2), new Point(4, -3)};
+    private final Point[] Z_s2_Points = {new Point(3, -1), new Point(4, -1), new Point(4, -2), new Point(5, -2)};
+    private final Point[] Z_s3_Points = {new Point(3, -3), new Point(3, -2), new Point(4, -2), new Point(4, -1)};
 
+    private final Point[] REVERSE_Z_Points =   {new Point(3, -2), new Point(4, -2), new Point(4, -1), new Point(5, -1)};
+    private final Point[] REVERSE_Z_s1_Points =  {new Point(4, -1), new Point(4, -2), new Point(5, -2), new Point(5, -3)};
+    private final Point[] REVERSE_Z_s2_Points =  {new Point(3, -2), new Point(4, -2), new Point(4, -1), new Point(5, -1)};
+    private final Point[] REVERSE_Z_s3_Points =  {new Point(3, -1), new Point(3, -2), new Point(4, -2), new Point(4, -3)};
 
     public TetrisControl()
     {
@@ -317,7 +316,7 @@ public class TetrisControl {
     {
         boolean valide = this.changeState(points[this.current_state]);
         this.current_state++;
-        if(this.current_state >= 3)
+        if(this.current_state > 3)
         {
             this.current_state = 0;
         }
@@ -406,12 +405,13 @@ public class TetrisControl {
 
 
     private void checkLines() {
-        for (int i = 0; i < this.TETRIS_HEIGHT; i++)
+        int combo = 0;
+        for (int y = 0;y < this.TETRIS_HEIGHT;y ++)
         {
             boolean stop = false;
-            for (int j = 0; j < this.TETRIS_WIDTH; j++)
+            for (int x = 0; x < this.TETRIS_WIDTH; x++)
             {
-                if(this.getTile(new Point(i,j)) == TetrisShapeType.NONE)
+                if(this.getTile(new Point(x,y)) == TetrisShapeType.NONE)
                 {
                     stop = true;
                     break;
@@ -420,20 +420,21 @@ public class TetrisControl {
 
             if(!stop)
             {
-                //this.clearLine(i);
-                this.tetrisScore += 10 * this.tetrisSpeed;
-                //i--;
+                combo++;
+                this.tetrisScore += 10 * combo;
+                this.clearLine(y);
+                y--;
             }
         }
     }
 
-    private void clearLine(int y)
+    private void clearLine(int line_y)
     {
-        for(int i = y;i < 0; i--)
+        for (int y = line_y;y != 0; y--)
         {
-            for(int j = 0;j<this.TETRIS_WIDTH;j++)
+            for (int x = 0;x < this.TETRIS_WIDTH; x++)
             {
-                this.setTile(new Point(j,i),this.getTile(new Point(j,i+1)));
+                this.setTile(new Point(x,y),this.getTile(new Point(x,y-1)));
             }
         }
     }
@@ -442,7 +443,7 @@ public class TetrisControl {
         this.current_y = 0;
         this.current_x = 0;
         this.current_state = 0;
-        
+
         int id = this.rand.nextInt(6);
 
         this.current_type = TetrisShapeType.values()[id];
