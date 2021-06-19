@@ -43,6 +43,11 @@ public class GameDraw {
 
     public double btnTime = 0.0;
 
+    public void drawCenterXText(Canvas canvas, String text, int y, Paint paint)
+    {
+        canvas.drawText(text,canvas.getWidth()/2-paint.measureText(text)/2, canvas.getHeight()/2 + y,paint);
+    }
+
     public void drawPlayButton(Canvas canvas) {
         Paint paint = new Paint();
         float x = canvas.getWidth()/2;

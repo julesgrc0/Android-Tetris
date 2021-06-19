@@ -1,26 +1,12 @@
 package com.julesg10.tetris;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.media.AudioAttributes;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.SoundPool;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
 
@@ -41,6 +27,7 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
     private double gameTime = 0;
     private boolean showHiddenInfos = false;
     private boolean showScore = false;
+    private boolean showGameOver = false;
 
 
     public MainSurface(Context context) {
@@ -94,6 +81,11 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
         {
             this.tetrisDraw.btnTime +=deltatime;
         }else{
+            if(this.tetrisControl.isGameOver())
+            {
+                this.showGameOver = true;
+                this.tetrisRunning = false;
+            }
             if(this.lastacion != TetrisClickActionType.NONE)
             {
                 if(this.lastacion == TetrisClickActionType.LEFT)
@@ -171,10 +163,25 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
         Paint paint = new Paint();
         if(!this.tetrisRunning)
         {
-            paint.setARGB(255,150,150,150);
-            paint.setTextSize(50);
-            this.tetrisDraw.drawPlayButton(canvas);
-            canvas.drawText("Press to start",canvas.getWidth()/2-145, canvas.getHeight()/2 + 290,paint);
+            if(this.showGameOver)
+            {
+                this.tetrisTime = 0;
+                this.gameTime = 0;
+                this.showHiddenInfos = false;
+                this.showScore = false;
+                this.tetrisControl.reset();
+
+                paint.setARGB(255,150,150,150);
+                paint.setTextSize(50);
+                this.tetrisDraw.drawPlayButton(canvas);
+                this.tetrisDraw.drawCenterXText(canvas,"GameOver Press to restart",290,paint);
+            }else{
+                paint.setARGB(255,150,150,150);
+                paint.setTextSize(50);
+                this.tetrisDraw.drawPlayButton(canvas);
+                this.tetrisDraw.drawCenterXText(canvas,"Press to start",290,paint);
+            }
+
         }else {
             Size s = new Size();
             s.width = canvas.getWidth();
