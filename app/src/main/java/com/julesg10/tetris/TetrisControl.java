@@ -1,4 +1,7 @@
 package com.julesg10.tetris;
+
+import android.graphics.Color;
+
 import java.util.Arrays;
 import java.util.Random;
 
@@ -24,12 +27,12 @@ enum TetrisClickActionType
 
 class TetrisClickAction
 {
-    public static int SURFACE_HEIGHT = 0;
+    public static int SECTION_HEIGHT = 0;
     public static int SURFACE_WIDTH = 0;
 
-    public static TetrisClickActionType getAction(int section,Point pos)
+    public static TetrisClickActionType getAction(Point pos)
     {
-        if(pos.y >= SURFACE_HEIGHT - section)
+        if(pos.y >= SECTION_HEIGHT)
         {
             int size = SURFACE_WIDTH/3;
             if(pos.x >= 0 && pos.x < size)
@@ -44,6 +47,40 @@ class TetrisClickAction
             }
         }
         return TetrisClickActionType.NONE;
+    }
+}
+
+class TetrisARGB{
+    public int a = 255;
+    public int r = 255;
+    public int g = 255;
+    public int b = 255;
+
+
+    public TetrisARGB(int a, int r, int g, int b)
+    {
+        this.a = a;
+        this.r = r;
+        this.g = g;
+        this.b = b;
+    }
+
+    public TetrisARGB fromHexString(String colorStr) {
+        this.r = Integer.valueOf(colorStr.substring(1, 3), 16);
+        this.g = Integer.valueOf(colorStr.substring(3, 5), 16);
+        this.b = Integer.valueOf(colorStr.substring(5, 7), 16);
+        return this;
+    }
+
+    public int[] getArray()
+    {
+        int[] value = new int[4];
+        value[0] = this.a;
+        value[1] = this.r;
+        value[2] = this.g;
+        value[3] = this.b;
+
+        return value;
     }
 }
 
@@ -128,53 +165,68 @@ public class TetrisControl {
         return this.tetrisScore;
     }
 
-    public int[] getTetrisShapeColor(TetrisShapeType type) {
-        int[] argb = new int[4];
-        argb[0] = 255;
-        argb[1] = 0;
-        argb[2] = 0;
-        argb[3] = 0;
+    public int[][] getTetrisShapeColor(TetrisShapeType type) {
+        int[][] argb = new int[5][4];
+        TetrisARGB tcolor = new TetrisARGB(255,0,0,0);
 
         switch (type) {
             case NONE:
-                argb[1] = 60;
-                argb[2] = 60;
-                argb[3] = 60;
+                /*
+                argb[0] = tcolor.fromHexString("#777777").getArray();// center
+                argb[1] = tcolor.fromHexString("#a0a0a0").getArray();// left
+                argb[2] = tcolor.fromHexString("#d6d6d6").getArray();// top
+                argb[3] = tcolor.fromHexString("#535353").getArray();// right
+                argb[4] = tcolor.fromHexString("#232323").getArray();// bottom
+                */
                 break;
             case LINE:
-                argb[1] = 0;
-                argb[2] = 240;
-                argb[3] = 240;
+                argb[0] = tcolor.fromHexString("#00ffff").getArray();
+                argb[1] = tcolor.fromHexString("#4dffff").getArray();
+                argb[2] = tcolor.fromHexString("#b3ffff").getArray();
+                argb[3] = tcolor.fromHexString("#00bcbc").getArray();
+                argb[4] = tcolor.fromHexString("#004c4c").getArray();
                 break;
             case SQUARE:
-                argb[1] = 240;
-                argb[2] = 240;
-                argb[3] = 0;
+                argb[0] = tcolor.fromHexString("#ffff00").getArray();
+                argb[1] = tcolor.fromHexString("#ffff4d").getArray();
+                argb[2] = tcolor.fromHexString("#ffffb3").getArray();
+                argb[3] = tcolor.fromHexString("#bcbc00").getArray();
+                argb[4] = tcolor.fromHexString("#4c4c00").getArray();
                 break;
             case L:
-                argb[1] = 0;
-                argb[2] = 0;
-                argb[3] = 240;
+                argb[0] = tcolor.fromHexString("#0000aa").getArray();
+                argb[1] = tcolor.fromHexString("#4d4dc4").getArray();
+                argb[2] = tcolor.fromHexString("#b3b3e6").getArray();
+                argb[3] = tcolor.fromHexString("#000077").getArray();
+                argb[4] = tcolor.fromHexString("#000033").getArray();
                 break;
             case REVERSE_L:
-                argb[1] = 240;
-                argb[2] = 160;
-                argb[3] = 0;
+                argb[0] = tcolor.fromHexString("#ff7700").getArray();
+                argb[1] = tcolor.fromHexString("#ffa04d").getArray();
+                argb[2] = tcolor.fromHexString("#ffcb9d").getArray();
+                argb[3] = tcolor.fromHexString("#b25300").getArray();
+                argb[4] = tcolor.fromHexString("#4c2300").getArray();
                 break;
             case REVERSE_Z:
-                argb[1] = 0;
-                argb[2] = 240;
-                argb[3] = 0;
+                argb[0] = tcolor.fromHexString("#00ff00").getArray();
+                argb[1] = tcolor.fromHexString("#4dff4d").getArray();
+                argb[2] = tcolor.fromHexString("#b3ffb3").getArray();
+                argb[3] = tcolor.fromHexString("#00bc00").getArray();
+                argb[4] = tcolor.fromHexString("#004c00").getArray();
                 break;
             case Z:
-                argb[1] = 240;
-                argb[2] = 0;
-                argb[3] = 0;
+                argb[0] = tcolor.fromHexString("#ff0000").getArray();
+                argb[1] = tcolor.fromHexString("#ff4d4d").getArray();
+                argb[2] = tcolor.fromHexString("#ffb3b3").getArray();
+                argb[3] = tcolor.fromHexString("#b20000").getArray();
+                argb[4] = tcolor.fromHexString("#4c0000").getArray();
                 break;
             case T:
-                argb[1] = 160;
-                argb[2] = 0;
-                argb[3] = 240;
+                argb[0] = tcolor.fromHexString("#cc00cc").getArray();
+                argb[1] = tcolor.fromHexString("#d943d9").getArray();
+                argb[2] = tcolor.fromHexString("#f0b3f0").getArray();
+                argb[3] = tcolor.fromHexString("#8e008e").getArray();
+                argb[4] = tcolor.fromHexString("#3d003d").getArray();
                 break;
         }
 
@@ -274,7 +326,7 @@ public class TetrisControl {
     }
 
     public boolean rotate() {
-       boolean valide = false;
+        boolean valide = false;
         switch (this.current_type)
         {
             case LINE:
@@ -330,14 +382,8 @@ public class TetrisControl {
         for(int i = 0; i < p.length; i++)
         {
             Point tmp = new Point(p[i].x + this.current_x,p[i].y + this.current_y);
-            if(this.isOnMatrix(tmp))
+            if(this.getTile(tmp) != TetrisShapeType.NONE)
             {
-                if(this.getTile(tmp) != TetrisShapeType.NONE)
-                {
-                    valide = false;
-                    break;
-                }
-            }else{
                 valide = false;
                 break;
             }
@@ -442,7 +488,7 @@ public class TetrisControl {
     private void generatePoints() {
         this.current_y = 0;
         this.current_x = 0;
-        this.current_state = 0;
+        this.current_state = 1;
 
         int id = this.rand.nextInt(6);
 

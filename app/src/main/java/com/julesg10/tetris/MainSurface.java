@@ -14,8 +14,7 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
     private TetrisControl tetrisControl;
     private GameDraw tetrisDraw;
     private MediaPlayer mediaPlayer;
-
-    private TetrisClickActionType lastacion = TetrisClickActionType.NONE;
+    private SettingStorage settingStorage;
 
     private boolean tetrisRunning = false;
     private boolean tetrisMatrixInit = false;
@@ -36,12 +35,30 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
         this.getHolder().addCallback(this);
         this.tetrisControl = new TetrisControl();
         this.tetrisDraw = new GameDraw();
+        this.settingStorage = new SettingStorage(context);
+        if(this.settingStorage.load())
+        {
+           if(this.settingStorage.get(0) == "true")
+           {
+               this.showScore = true;
+           }
 
+            if(this.settingStorage.get(1) == "true")
+            {
+                this.showHiddenInfos = true;
+            }
+
+            if(this.settingStorage.get(2) == "false")
+            {
+                this.tetrisDraw.detailDrawMode = false;
+            }
+        }
         this.mediaPlayer = MediaPlayer.create(context, R.raw.tetris);
         this.mediaPlayer.setLooping(true);
     }
 
     private long downstartTime = 0;
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -54,8 +71,13 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
                 if(pressTime >= 1000 && (event.getX() >= 0 && event.getX() <= 50 && event.getY() >= 0 && event.getY() <= 50))
                 {
                     showHiddenInfos = !showHiddenInfos;
+                    this.settingStorage.set(1,showHiddenInfos ? "true" : "false");
+                }else{
+                    showScore = !showScore;
+                    showHiddenInfos = false;
+                    this.settingStorage.set(0,showScore ? "true" : "false");
+                    this.settingStorage.set(1,"false");
                 }
-                showScore = !showScore;
             }
         }
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -69,7 +91,17 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
             }else{
                 int x = (int) event.getX();
                 int y = (int) event.getY();
-                this.lastacion = TetrisClickAction.getAction(this.spaceBandSize*this.tetrisTileSize,new Point(x,y));
+                switch (TetrisClickAction.getAction(new Point(x,y))) {
+                    case LEFT:
+                        this.tetrisControl.left();
+                        break;
+                    case RIGHT:
+                        this.tetrisControl.right();
+                        break;
+                    case ROTATE:
+                        this.tetrisControl.rotate();
+                        break;
+                }
             }
             return true;
         }
@@ -86,21 +118,6 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
                 this.showGameOver = true;
                 this.tetrisRunning = false;
             }
-            if(this.lastacion != TetrisClickActionType.NONE)
-            {
-                if(this.lastacion == TetrisClickActionType.LEFT)
-                {
-                    this.tetrisControl.left();
-                }else if(this.lastacion == TetrisClickActionType.RIGHT)
-                {
-                    this.tetrisControl.right();
-                }else if(this.lastacion == TetrisClickActionType.ROTATE)
-                {
-                 this.tetrisControl.rotate();
-                }
-
-                this.lastacion = TetrisClickActionType.NONE;
-            }
 
             this.gameTime += deltatime;
             this.updateSpeed();
@@ -116,25 +133,35 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
 
     private void updateSpeed()
     {
-        if(this.gameTime >= 10)
+        if(gameTime >= 30)
         {
-            this.tetrisControl.tetrisSpeed = 50;
+            this.tetrisControl.tetrisSpeed  = 35;
         }
 
-      /*  if(gameTime >= 60)
+        if(gameTime >= 60)
         {
-            this.tetrisSpeed = 20;
-        }
-
-        if(gameTime >= 90)
-        {
-            this.tetrisSpeed = 10;
+            this.tetrisControl.tetrisSpeed = 25;
         }
 
         if(gameTime >= 120)
         {
-            this.tetrisSpeed = 5;
-        }*/
+            this.tetrisControl.tetrisSpeed = 15;
+        }
+
+        if(gameTime >= 180)
+        {
+            this.tetrisControl.tetrisSpeed = 8;
+        }
+
+        if(gameTime >= 300)
+        {
+            this.tetrisControl.tetrisSpeed = 5;
+        }
+
+        if(gameTime >= 600)
+        {
+            this.tetrisControl.tetrisSpeed = 0.5;
+        }
     }
 
     @Override
@@ -144,11 +171,11 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
         {
             this.tetrisMatrixInit = true;
 
-            TetrisClickAction.SURFACE_WIDTH = canvas.getWidth();
-            TetrisClickAction.SURFACE_HEIGHT = canvas.getHeight();
-
             this.tetrisTileSize = (int)Math.round(canvas.getWidth() / 10);
             this.tetrisControl.TETRIS_HEIGHT = (int)(canvas.getHeight()/this.tetrisTileSize) - this.spaceBandSize;
+
+            TetrisClickAction.SURFACE_WIDTH = canvas.getWidth();
+            TetrisClickAction.SECTION_HEIGHT = this.tetrisControl.TETRIS_HEIGHT * this.tetrisTileSize;
 
             if(this.tetrisControl.TETRIS_HEIGHT < 5)
             {
@@ -165,16 +192,17 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
         {
             if(this.showGameOver)
             {
+                paint.setARGB(255,150,150,150);
+                paint.setTextSize(50);
+                this.tetrisDraw.drawPlayButton(canvas);
+                this.tetrisDraw.drawCenterXText(canvas,"Score "+Integer.toString(this.tetrisControl.getScore()),-240,paint);
+                this.tetrisDraw.drawCenterXText(canvas,"GameOver Press to restart",290,paint);
+
                 this.tetrisTime = 0;
                 this.gameTime = 0;
                 this.showHiddenInfos = false;
                 this.showScore = false;
                 this.tetrisControl.reset();
-
-                paint.setARGB(255,150,150,150);
-                paint.setTextSize(50);
-                this.tetrisDraw.drawPlayButton(canvas);
-                this.tetrisDraw.drawCenterXText(canvas,"GameOver Press to restart",290,paint);
             }else{
                 paint.setARGB(255,150,150,150);
                 paint.setTextSize(50);
@@ -189,6 +217,7 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
 
             Point pos = new Point(0, 0);
             this.tetrisDraw.drawtiles(canvas, pos, s, this.tetrisTileSize, this.tetrisControl);
+            this.tetrisDraw.drawActionButtons(canvas,TetrisClickAction.SECTION_HEIGHT);
 
             if(showScore && !showHiddenInfos)
             {
@@ -208,16 +237,17 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
     }
 
 
+
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height)
     {
         this.tetrisMatrixInit = true;
 
-        TetrisClickAction.SURFACE_WIDTH = width;
-        TetrisClickAction.SURFACE_HEIGHT = height;
-
         this.tetrisTileSize = (int)Math.round(width / 10);
         this.tetrisControl.TETRIS_HEIGHT = (int)(height/this.tetrisTileSize) - this.spaceBandSize;
+
+        TetrisClickAction.SURFACE_WIDTH = width;
+        TetrisClickAction.SECTION_HEIGHT = this.tetrisControl.TETRIS_HEIGHT * this.tetrisTileSize;
 
         if(this.tetrisControl.TETRIS_HEIGHT < 5)
         {
@@ -238,9 +268,12 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
                 this.gameThread.setRunning(false);
                 this.gameThread.join();
             } catch (InterruptedException e) {
-                e.printStackTrace();
             }
         }
     }
 
+    public void saveSettings()
+    {
+        this.settingStorage.save();
+    }
 }
