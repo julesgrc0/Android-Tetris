@@ -28,9 +28,11 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
     private boolean showScore = false;
     private boolean showGameOver = false;
     private long downstartTime = 0;
+    private Context context;
 
     public MainSurface(Context context) {
         super(context);
+        this.context = context;
         this.setFocusable(true);
         this.getHolder().addCallback(this);
         this.tetrisControl = new TetrisControl();
@@ -151,6 +153,13 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
         this.gameTime = 0;
         this.showHiddenInfos = false;
         this.showScore = false;
+        if(!this.mediaPlayer.isPlaying())
+        {
+            this.mediaPlayer.reset();
+            this.mediaPlayer = MediaPlayer.create(context, R.raw.tetris);
+            this.mediaPlayer.setLooping(true);
+            this.mediaPlayer.start();
+        }
         this.tetrisControl.reset();
     }
 
