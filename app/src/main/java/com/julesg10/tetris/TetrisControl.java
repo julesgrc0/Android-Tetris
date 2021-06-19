@@ -490,7 +490,7 @@ public class TetrisControl {
         this.current_x = 0;
         this.current_state = 1;
 
-        int id = this.rand.nextInt(6);
+        int id = this.rand.nextInt(7);
 
         this.current_type = TetrisShapeType.values()[id];
         switch (this.current_type) {

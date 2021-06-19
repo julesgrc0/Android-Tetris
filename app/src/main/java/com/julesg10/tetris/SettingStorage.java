@@ -19,7 +19,6 @@ public class SettingStorage {
     public SettingStorage(Context ctx)
     {
         this.dataArray = new String[]{"false","false","false"};
-
         this.context = ctx;
     }
 
@@ -46,15 +45,22 @@ public class SettingStorage {
         FileOutputStream fos = null;
         try {
             fos = this.context.openFileOutput(STORAGE_NAME, this.context.MODE_PRIVATE);
-            String data = this.dataArray.toString();
+            String data = "";
+            for(int i = 0;i<this.dataArray.length;i++)
+            {
+                data += this.dataArray[i]+"\n";
+            }
             fos.write(data.getBytes());
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             if (fos != null) {
                 try {
                     fos.close();
                 } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -72,15 +78,21 @@ public class SettingStorage {
             while ((text = br.readLine()) != null) {
                 sb.append(text).append("\n");
             };
-            this.dataArray = sb.toString().split("\n");
+            this.dataArray = new String[sb.toString().split("\n").length];
+            for (int i = 0; i < this.dataArray.length; i++) {
+                this.dataArray[i] = sb.toString().split("\n")[i];
+            }
             this.isload = true;
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             if (fis != null) {
                 try {
                     fis.close();
                 } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }

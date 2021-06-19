@@ -8,6 +8,7 @@ import android.view.WindowManager;
 public class MainActivity extends AppCompatActivity {
 
     MainSurface mainSurface;
+    private boolean resumeStart = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,19 +23,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        this.mainSurface = new MainSurface(this);
-        this.setContentView(this.mainSurface);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
+        this.mainSurface.stopSong();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         this.mainSurface.saveSettings();
+        this.mainSurface.stopSong();
     }
 }
