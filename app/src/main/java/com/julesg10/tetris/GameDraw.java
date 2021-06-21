@@ -1,15 +1,31 @@
 package com.julesg10.tetris;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.VectorDrawable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 
 public class GameDraw {
     public GameDraw() {}
 
     public boolean detailDrawMode = true;
+
+    public void drawSVG(Context ctx, Canvas canvas, Point pos, int drawableId) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        Bitmap bitmap = BitmapFactory.decodeResource(
+                ctx.getResources(), drawableId, options);
+        Paint paint = new Paint();
+        canvas.drawBitmap(bitmap,(float)pos.x,(float)pos.y,paint);
+    }
 
     public void drawtiles(Canvas canvas, Point pos, Size s, float tileSize, TetrisControl tetrisControl) {
         Paint p = new Paint();
@@ -88,7 +104,7 @@ public class GameDraw {
         canvas.drawLine((float)rect.x, (float)rect.y + size, (float)rect.x + size, (float)rect.y + size, p);
     }
 
-    public void drawActionButtons(Canvas canvas,int y)
+    public void drawActionButtons(Canvas canvas,int y,Context context)
     {
         Paint paint = new Paint();
         int btnSize = canvas.getWidth()/3;

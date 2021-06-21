@@ -106,7 +106,7 @@ public class TetrisControl {
     private final Point[] LINE_Points = {new Point(4, -1), new Point(4, -2), new Point(4, -3), new Point(4, -4)};
     private final Point[] LINE_s1_Points = {new Point(2, -1), new Point(3, -1), new Point(4, -1), new Point(5, -1)};
 
-    private final Point[] T_Points =    {new Point(3, -2), new Point(4, -2), new Point(5, -2), new Point(4, -1)};
+    private final Point[] T_Points = {new Point(3, -2), new Point(4, -2), new Point(5, -2), new Point(4, -1)};
     private final Point[] T_s1_Points = {new Point(4, -3), new Point(4, -2), new Point(4, -1), new Point(5, -2)};
     private final Point[] T_s2_Points = {new Point(3, -1), new Point(4, -1), new Point(5, -1), new Point(4, -2)};
     private final Point[] T_s3_Points = {new Point(4, -3), new Point(4, -2), new Point(4, -1), new Point(3, -2)};
@@ -119,20 +119,19 @@ public class TetrisControl {
     private final Point[] REVERSE_L_Points = {new Point(3, -2), new Point(4, -2), new Point(5, -2), new Point(3, -1)};
     private final Point[] REVERSE_L_s1_Points = {new Point(5, -1), new Point(4, -3), new Point(4, -2), new Point(4, -1)};
     private final Point[] REVERSE_L_s2_Points = {new Point(5, -2), new Point(3, -1), new Point(4, -1), new Point(5, -1)};
-    private final Point[] REVERSE_L_s3_Points =  {new Point(3, -1), new Point(3, -2), new Point(3, -3), new Point(4, -1)};
+    private final Point[] REVERSE_L_s3_Points = {new Point(3, -1), new Point(3, -2), new Point(3, -3), new Point(4, -1)};
 
     private final Point[] Z_Points = {new Point(4, -2), new Point(5, -2), new Point(3, -1), new Point(4, -1)};
     private final Point[] Z_s1_Points = {new Point(5, -1), new Point(5, -2), new Point(4, -2), new Point(4, -3)};
     private final Point[] Z_s2_Points = {new Point(3, -1), new Point(4, -1), new Point(4, -2), new Point(5, -2)};
     private final Point[] Z_s3_Points = {new Point(3, -3), new Point(3, -2), new Point(4, -2), new Point(4, -1)};
 
-    private final Point[] REVERSE_Z_Points =   {new Point(3, -2), new Point(4, -2), new Point(4, -1), new Point(5, -1)};
-    private final Point[] REVERSE_Z_s1_Points =  {new Point(4, -1), new Point(4, -2), new Point(5, -2), new Point(5, -3)};
-    private final Point[] REVERSE_Z_s2_Points =  {new Point(3, -2), new Point(4, -2), new Point(4, -1), new Point(5, -1)};
-    private final Point[] REVERSE_Z_s3_Points =  {new Point(3, -1), new Point(3, -2), new Point(4, -2), new Point(4, -3)};
+    private final Point[] REVERSE_Z_Points = {new Point(3, -2), new Point(4, -2), new Point(4, -1), new Point(5, -1)};
+    private final Point[] REVERSE_Z_s1_Points = {new Point(4, -1), new Point(4, -2), new Point(5, -2), new Point(5, -3)};
+    private final Point[] REVERSE_Z_s2_Points = {new Point(3, -2), new Point(4, -2), new Point(4, -1), new Point(5, -1)};
+    private final Point[] REVERSE_Z_s3_Points = {new Point(3, -1), new Point(3, -2), new Point(4, -2), new Point(4, -3)};
 
-    public TetrisControl()
-    {
+    public TetrisControl() {
 
     }
 
@@ -148,16 +147,13 @@ public class TetrisControl {
         }
     }
 
-    public boolean isGameOver()
-    {
+    public boolean isGameOver() {
         return isOver;
     }
 
-    private void setCurrentPosition(Point[] p)
-    {
-        for(int i = 0; i < p.length; i++)
-        {
-            this.current_position[i] = new Point(p[i].x,p[i].y);
+    private void setCurrentPosition(Point[] p) {
+        for (int i = 0; i < p.length; i++) {
+            this.current_position[i] = new Point(p[i].x, p[i].y);
         }
     }
 
@@ -167,7 +163,7 @@ public class TetrisControl {
 
     public int[][] getTetrisShapeColor(TetrisShapeType type) {
         int[][] argb = new int[5][4];
-        TetrisARGB tcolor = new TetrisARGB(255,0,0,0);
+        TetrisARGB tcolor = new TetrisARGB(255, 0, 0, 0);
 
         switch (type) {
             case NONE:
@@ -261,7 +257,7 @@ public class TetrisControl {
     }
 
     public void update() {
-            this.moveDown();
+        this.moveDown();
     }
 
     public boolean setTile(Point p, TetrisShapeType value) {
@@ -290,29 +286,26 @@ public class TetrisControl {
         boolean valide = true;
 
         for (int i = 0; i < this.current_position.length; i++) {
-            if(!(this.current_position[i].x+add < 0)  && !(this.current_position[i].x+add >= this.TETRIS_WIDTH))
-            {
-                Point tmp = new Point(this.current_position[i].x+add,this.current_position[i].y);
-                if(this.getTile(tmp) != TetrisShapeType.NONE)
-                {
+            if (!(this.current_position[i].x + add < 0) && !(this.current_position[i].x + add >= this.TETRIS_WIDTH)) {
+                Point tmp = new Point(this.current_position[i].x + add, this.current_position[i].y);
+                if (this.getTile(tmp) != TetrisShapeType.NONE) {
                     valide = false;
                     break;
                 }
-            }else{
+            } else {
                 valide = false;
                 break;
             }
         }
 
-        if(valide)
-        {
+        if (valide) {
             this.current_x += add;
             for (int i = 0; i < this.current_position.length; i++) {
                 this.current_position[i].x += add;
             }
 
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -327,36 +320,34 @@ public class TetrisControl {
 
     public boolean rotate() {
         boolean valide = false;
-        switch (this.current_type)
-        {
+        switch (this.current_type) {
             case LINE:
-                if(this.current_state == 0)
-                {
+                if (this.current_state == 0) {
                     this.current_state = 1;
                     valide = this.changeState(this.LINE_Points);
-                }else{
+                } else {
                     this.current_state = 0;
                     valide = this.changeState(this.LINE_s1_Points);
                 }
                 break;
             case Z:
-                Point[][] Zpoints = {this.Z_Points,this.Z_s1_Points,this.Z_s2_Points,this.Z_s3_Points};
+                Point[][] Zpoints = {this.Z_Points, this.Z_s1_Points, this.Z_s2_Points, this.Z_s3_Points};
                 valide = this.SwitchStates(Zpoints);
                 break;
             case T:
-                Point[][] Tpoints = {this.T_Points,this.T_s1_Points,this.T_s2_Points,this.T_s3_Points};
+                Point[][] Tpoints = {this.T_Points, this.T_s1_Points, this.T_s2_Points, this.T_s3_Points};
                 valide = this.SwitchStates(Tpoints);
                 break;
             case L:
-                Point[][] Lpoints = {this.L_Points,this.L_s1_Points,this.L_s2_Points,this.L_s3_Points};
+                Point[][] Lpoints = {this.L_Points, this.L_s1_Points, this.L_s2_Points, this.L_s3_Points};
                 valide = this.SwitchStates(Lpoints);
                 break;
             case REVERSE_L:
-                Point[][] RLpoints = {this.REVERSE_L_Points,this.REVERSE_L_s1_Points,this.REVERSE_L_s2_Points,this.REVERSE_L_s3_Points};
+                Point[][] RLpoints = {this.REVERSE_L_Points, this.REVERSE_L_s1_Points, this.REVERSE_L_s2_Points, this.REVERSE_L_s3_Points};
                 valide = this.SwitchStates(RLpoints);
                 break;
             case REVERSE_Z:
-                Point[][] RZpoints = {this.REVERSE_Z_Points,this.REVERSE_Z_s1_Points,this.REVERSE_Z_s2_Points,this.REVERSE_Z_s3_Points};
+                Point[][] RZpoints = {this.REVERSE_Z_Points, this.REVERSE_Z_s1_Points, this.REVERSE_Z_s2_Points, this.REVERSE_Z_s3_Points};
                 valide = this.SwitchStates(RZpoints);
                 break;
         }
@@ -364,34 +355,31 @@ public class TetrisControl {
         return valide;
     }
 
-    private boolean SwitchStates(Point[][] points)
-    {
-        boolean valide = this.changeState(points[this.current_state]);
-        this.current_state++;
-        if(this.current_state > 3)
-        {
-            this.current_state = 0;
+    private boolean SwitchStates(Point[][] points) {
+        if (this.changeState(points[this.current_state])) {
+            this.current_state++;
+            if (this.current_state > 3) {
+                this.current_state = 0;
+            }
+            return true;
         }
-
-        return valide;
+        return false;
     }
 
-    private boolean changeState(Point[] p)
-    {
+    private boolean changeState(Point[] p) {
         boolean valide = true;
-        for(int i = 0; i < p.length; i++)
-        {
-            Point tmp = new Point(p[i].x + this.current_x,p[i].y + this.current_y);
-            if(this.getTile(tmp) != TetrisShapeType.NONE)
-            {
+        for (int i = 0; i < p.length; i++) {
+            Point tmp = new Point(p[i].x + this.current_x, p[i].y + this.current_y);
+            if (this.getTile(tmp) != TetrisShapeType.NONE || tmp.x >= this.TETRIS_WIDTH) {
                 valide = false;
                 break;
             }
         }
-        if(valide)
-        {
-            for(int i = 0; i < p.length; i++) {
-                this.current_position[i] = new Point(p[i].x + this.current_x,p[i].y + this.current_y);
+
+
+        if (valide) {
+            for (int i = 0; i < p.length; i++) {
+                this.current_position[i] = new Point(p[i].x + this.current_x, p[i].y + this.current_y);
             }
         }
         return valide;
@@ -399,48 +387,41 @@ public class TetrisControl {
 
     private boolean moveDown() {
         boolean valide = true;
-        try{
+        try {
             for (int i = 0; i < this.current_position.length; i++) {
-                if(!(this.current_position[i].y+1 >= this.TETRIS_HEIGHT))
-                {
-                    Point tmp = new Point(this.current_position[i].x,this.current_position[i].y+1);
-                    if(this.getTile(tmp) != TetrisShapeType.NONE)
-                    {
+                if (!(this.current_position[i].y + 1 >= this.TETRIS_HEIGHT)) {
+                    Point tmp = new Point(this.current_position[i].x, this.current_position[i].y + 1);
+                    if (this.getTile(tmp) != TetrisShapeType.NONE) {
                         valide = false;
                         break;
                     }
-                }else{
+                } else {
                     valide = false;
                     break;
                 }
             }
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             valide = false;
             e.printStackTrace();
         }
 
 
-        if(valide)
-        {
+        if (valide) {
             this.current_y++;
             for (int i = 0; i < this.current_position.length; i++) {
                 this.current_position[i].y += 1;
             }
             return true;
-        }else{
+        } else {
             this.stopCurrent();
             return false;
         }
     }
 
     private void stopCurrent() {
-        for (int i = 0; i < this.current_position.length; i++)
-        {
-            if(!this.setTile(this.current_position[i],this.current_type))
-            {
-                if(this.current_position[i].y < 0)
-                {
+        for (int i = 0; i < this.current_position.length; i++) {
+            if (!this.setTile(this.current_position[i], this.current_type)) {
+                if (this.current_position[i].y < 0) {
                     this.isOver = true;
                 }
             }
@@ -452,20 +433,16 @@ public class TetrisControl {
 
     private void checkLines() {
         int combo = 0;
-        for (int y = 0;y < this.TETRIS_HEIGHT;y ++)
-        {
+        for (int y = 0; y < this.TETRIS_HEIGHT; y++) {
             boolean stop = false;
-            for (int x = 0; x < this.TETRIS_WIDTH; x++)
-            {
-                if(this.getTile(new Point(x,y)) == TetrisShapeType.NONE)
-                {
+            for (int x = 0; x < this.TETRIS_WIDTH; x++) {
+                if (this.getTile(new Point(x, y)) == TetrisShapeType.NONE) {
                     stop = true;
                     break;
                 }
             }
 
-            if(!stop)
-            {
+            if (!stop) {
                 combo++;
                 this.tetrisScore += 10 * combo;
                 this.clearLine(y);
@@ -474,13 +451,10 @@ public class TetrisControl {
         }
     }
 
-    private void clearLine(int line_y)
-    {
-        for (int y = line_y;y != 0; y--)
-        {
-            for (int x = 0;x < this.TETRIS_WIDTH; x++)
-            {
-                this.setTile(new Point(x,y),this.getTile(new Point(x,y-1)));
+    private void clearLine(int line_y) {
+        for (int y = line_y; y != 0; y--) {
+            for (int x = 0; x < this.TETRIS_WIDTH; x++) {
+                this.setTile(new Point(x, y), this.getTile(new Point(x, y - 1)));
             }
         }
     }
@@ -518,8 +492,7 @@ public class TetrisControl {
         }
     }
 
-    public void reset()
-    {
+    public void reset() {
         this.Init();
         this.tetrisSpeed = 50;
         this.tetrisScore = 0;

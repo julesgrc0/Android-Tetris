@@ -28,11 +28,10 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
     private boolean showScore = false;
     private boolean showGameOver = false;
     private long downstartTime = 0;
-    private Context context;
+    private int lastScore = 0;
 
     public MainSurface(Context context) {
         super(context);
-        this.context = context;
         this.setFocusable(true);
         this.getHolder().addCallback(this);
         this.tetrisControl = new TetrisControl();
@@ -156,7 +155,7 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
         if(!this.mediaPlayer.isPlaying())
         {
             this.mediaPlayer.reset();
-            this.mediaPlayer = MediaPlayer.create(context, R.raw.tetris);
+            this.mediaPlayer = MediaPlayer.create(this.getContext(), R.raw.tetris);
             this.mediaPlayer.setLooping(true);
             this.mediaPlayer.start();
         }
@@ -189,7 +188,7 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
                 paint.setARGB(255, 150, 150, 150);
                 paint.setTextSize(50);
                 this.tetrisDraw.drawPlayButton(canvas);
-                this.tetrisDraw.drawCenterXText(canvas, "Score " + Integer.toString(this.tetrisControl.getScore()), -240, paint);
+                this.tetrisDraw.drawCenterXText(canvas, "Score " + Integer.toString(this.lastScore), -240, paint);
                 this.tetrisDraw.drawCenterXText(canvas, "GameOver Press to restart", 290, paint);
 
                 this.resetTetris();
@@ -207,12 +206,12 @@ public class MainSurface extends SurfaceView implements SurfaceHolder.Callback {
 
             Point pos = new Point(0, 0);
             this.tetrisDraw.drawtiles(canvas, pos, s, this.tetrisTileSize, this.tetrisControl);
-            this.tetrisDraw.drawActionButtons(canvas, TetrisClickAction.SECTION_HEIGHT);
-
+            this.tetrisDraw.drawActionButtons(canvas, TetrisClickAction.SECTION_HEIGHT,this.getContext());
+            this.lastScore = this.tetrisControl.getScore();
             if (showScore && !showHiddenInfos) {
-                this.tetrisDraw.drawScore(canvas, this.tetrisControl.getScore());
+                this.tetrisDraw.drawScore(canvas, this.lastScore);
             } else if (showHiddenInfos) {
-                this.tetrisDraw.drawHiddenInfos(canvas, GameThread.getFPS(), canvas.getWidth(), canvas.getHeight(), this.tetrisTileSize, this.tetrisTime, this.gameTime, this.tetrisControl.getScore(), this.tetrisControl.tetrisSpeed);
+                this.tetrisDraw.drawHiddenInfos(canvas, GameThread.getFPS(), canvas.getWidth(), canvas.getHeight(), this.tetrisTileSize, this.tetrisTime, this.gameTime, this.lastScore, this.tetrisControl.tetrisSpeed);
             }
         }
     }

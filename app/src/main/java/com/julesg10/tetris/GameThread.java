@@ -54,6 +54,7 @@ public class GameThread extends Thread {
                 this.gameSurface.draw(canvas);
             }
         }catch(Exception e)  {
+            e.printStackTrace();
         } finally {
             if(canvas!= null)  {
                 this.surfaceHolder.unlockCanvasAndPost(canvas);
